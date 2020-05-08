@@ -2,6 +2,7 @@ import React from 'react'
 import axios, { post } from 'axios';
 import Router from 'next/router'
 import Head from 'next/head'
+import Link from 'next/link'
 class SimpleReactFileUpload extends React.Component {
 
   constructor(props) {
@@ -32,7 +33,7 @@ class SimpleReactFileUpload extends React.Component {
     this.setState({percentCompleted})
 }
   fileUpload(file){
-    const url = 'http://localhost:3000/api/upload';
+    const url = 'api/upload';
     const formData = new FormData();
     formData.append('file',file)
     const config = {

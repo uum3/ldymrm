@@ -44,10 +44,15 @@ function Blog({ file }) {
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries. See the "Technical details" section.
-export async function getServerSideProps({ params}) {
-
+export async function getServerSideProps({ req, params}) {
+	let res;
+	if(req){
+		res = await fetch(`http://localhost:3000/api/file/${params.id}`)
+	}
+	else {
+		  res = await fetch(`api/file/${params.id}`)
+	}
   // Call an external API endpoint to get posts.
-  const res = await fetch(`http://localhost:3000/api/file/${params.id}`)
   const file = await res.json()
 	console.log(file);
   // By returning { props: posts }, the Blog component
