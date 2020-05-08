@@ -31,7 +31,7 @@ function Blog({ file }) {
 		{file.type === "image/jpeg" && <img src="api/download/4"/>}
     <br/>
 		{file.type === "video/mp4" && <video style={{maxWidth: "500px", width: "100%"}} controls>
-			<source src={`api/download/${file.id}`} type={file.type} />
+			<source src={`/api/download/${file.id}/${file.name}`} type={file.type} />
 		</video>}
     <br/>
     {
