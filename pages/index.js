@@ -1,209 +1,87 @@
+import React from 'react'
+import axios, { post } from 'axios';
+import Router from 'next/router'
 import Head from 'next/head'
+class SimpleReactFileUpload extends React.Component {
 
-export default function Home() {
-  return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/zeit/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
-
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
-  )
+  constructor(props) {
+    super(props);
+    this.state ={
+      file:null,
+      percentCompleted: 0
+    }
+    this.onFormSubmit = this.onFormSubmit.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.fileUpload = this.fileUpload.bind(this)
+    this.onUploadProgress = this.onUploadProgress.bind(this)
+    this.humanFileSize = this.humanFileSize.bind(this)
+  }
+  onFormSubmit(e){
+    e.preventDefault() // Stop form submit
+    this.fileUpload(this.state.file).then((response)=>{
+      console.log(response.data);
+      Router.push(`/${response.data.id}`)
+    })
+  }
+  onChange(e) {
+    console.log(e.target.files[0]);
+    this.setState({file:e.target.files[0]})
+  }
+  onUploadProgress (progressEvent) {
+    const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+    this.setState({percentCompleted})
 }
+  fileUpload(file){
+    const url = 'http://localhost:3000/api/upload';
+    const formData = new FormData();
+    formData.append('file',file)
+    const config = {
+		  onUploadProgress: this.onUploadProgress,
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    return  post(url, formData,config)
+  }
+
+  humanFileSize(bytes, si) {
+      var thresh = si ? 1000 : 1024;
+      if(Math.abs(bytes) < thresh) {
+          return bytes + ' B';
+      }
+      var units = si
+          ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+          : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+      var u = -1;
+      do {
+          bytes /= thresh;
+          ++u;
+      } while(Math.abs(bytes) >= thresh && u < units.length - 1);
+      return bytes.toFixed(1)+' '+units[u];
+  }
+
+  render() {
+    return (
+      <div>
+      <Head>
+        <title>uum3 file sharing</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+        {this.state.percentCompleted !== 0 && <div style={{border: "1px solid black",  borderRadius: "2px", overflow: "hidden"}}>
+          <div style={{height: "20px", width: `${this.state.percentCompleted}%`, background: "black"}}></div>
+        </div>}
+        <form onSubmit={this.onFormSubmit}>
+          <input style={{width: "100%"}} type="file" onChange={this.onChange} />
+          <br/>
+          <button disabled={this.state.percentCompleted !== 0 ? true : false}>
+            Transfer
+          </button>
+        </form>
+      </div>
+   )
+  }
+}
+
+
+
+export default SimpleReactFileUpload
