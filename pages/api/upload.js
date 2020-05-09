@@ -1,8 +1,7 @@
 import formidable from 'formidable';
 import { PrismaClient } from '@prisma/client'
 import * as mkdirp from 'mkdirp'
-
-
+import hashids from '../../lib/hashid'
 const prisma = new PrismaClient()
 
 
@@ -24,10 +23,7 @@ export default async (req, res) => {
 	  console.log(err);
 		const {name, path, type, size} = data
 		const mtime = "12"
-		console.log(data);
 		const file = await prisma.file.create({data: {name, path, type, size, mtime}});
-		console.log(data);
-		console.log(file);
-		res.json(file);
+		res.json({id: hashids.encode(file.id)});
   });
 };

@@ -3,6 +3,13 @@ import axios, { post } from 'axios';
 import Router from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
+
+const handleRouteChange = url => {
+  console.log('App is changing to: ', url)
+}
+
+Router.events.on('routeChangeStart', handleRouteChange)
+
 class SimpleReactFileUpload extends React.Component {
 
   constructor(props) {
@@ -21,7 +28,7 @@ class SimpleReactFileUpload extends React.Component {
     e.preventDefault() // Stop form submit
     this.fileUpload(this.state.file).then((response)=>{
       console.log(response.data);
-      Router.push(`/${response.data.id}`)
+      Router.push('/[id]', `/${response.data.id}`)
     })
   }
   onChange(e) {

@@ -1,33 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import fs from "fs"
 const prisma = new PrismaClient()
-
-// export default async (req, res) => {
-//   const {
-//     query: { id },
-//   } = req
-//   const pp = Number(id)
-//   const file = await prisma.file.findOne({
-// 	where: { id: pp }
-//   })
-//   const stat = fs.statSync(file.path);
-//   const fileSize = stat.size
-//   const range = req.headers.range
-//   fs.readFile(file.path, function (err,data) {
-// 	  if (err) {
-// 		return console.log(err);
-// 	  }
-//     res.statusCode = 200
-// 	res.setHeader('Content-Type', file.type)
-// 	res.send(data)
-// });
-// }
-
+import hashids from '../../../../lib/hashid'
 export default async (req, res) => {
     const {
       query: { id, filename },
     } = req
-    const pp = Number(id)
+    const pp = hashids.decode(id)[0]
     const file = await prisma.file.findOne({
   	where: { id: pp }
     })

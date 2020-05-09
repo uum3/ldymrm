@@ -3,6 +3,7 @@ import fetch from 'node-fetch'
 import Head from 'next/head'
 
 
+
 // posts will be populated at build time by getStaticProps()
 function Blog({ file }) {
   const humanFileSize = (bytes, si) => {
@@ -37,24 +38,23 @@ function Blog({ file }) {
     {
       file.type !== "video/mp4" && <a href={`/api/download/${file.id}/${file.name}`}>Download</a>
     }
+	
 	</div>
   )
 }
 
-// This function gets called at build time on server-side.
-// It won't be called on client-side, so you can even do
-// direct database queries. See the "Technical details" section.
+
 export async function getServerSideProps({ req, params}) {
 	let res;
 	if(req){
 		res = await fetch(`http://localhost:3000/api/file/${params.id}`)
 	}
 	else {
-		  res = await fetch(`api/file/${params.id}`)
+		  res = await fetch(`http://localhost:3000/api/file/${params.id}`)
 	}
   // Call an external API endpoint to get posts.
   const file = await res.json()
-	console.log(file);
+
   // By returning { props: posts }, the Blog component
   // will receive `posts` as a prop at build time
   return {
