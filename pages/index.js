@@ -72,7 +72,7 @@ class SimpleReactFileUpload extends React.Component {
     return (
       <div>
       <Head>
-        <title>idk file sharing</title>
+        <title>uum3 file sharing</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
         {this.state.percentCompleted !== 0 && <div style={{border: "1px solid black",  borderRadius: "2px", overflow: "hidden"}}>
